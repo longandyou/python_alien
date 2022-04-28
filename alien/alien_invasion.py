@@ -3,6 +3,7 @@ import pygame
 from settings import Settings
 from ship import Ship
 
+
 class AlienInvasion:
     """管理游戏资源和行为的类"""
 
@@ -22,15 +23,21 @@ class AlienInvasion:
     def run_game(self):
         """开始游戏的主循环"""
         while True:
-            # 监视键盘和鼠标事件。
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    sys.exit()
+            self._check_events()
+            self._update_screen()
             # 每次循环都重绘屏幕
-            self.screen.fill(self.settings.bg_color)
-            self.ship.blitime()
-            # 让最近绘制的屏幕可见
-            pygame.display.flip()
+
+    def _check_events(self):
+        # 监视键盘和鼠标事件。
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                sys.exit()
+
+    def _update_screen(self):
+        self.screen.fill(self.settings.bg_color)
+        self.ship.blitime()
+        # 让最近绘制的屏幕可见
+        pygame.display.flip()
 
 
 if __name__ == '__main__':
