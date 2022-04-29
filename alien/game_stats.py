@@ -5,8 +5,8 @@ class GameStats:
         """初始化统计信息"""
         self.settings = ai_game.settings
         self.reset_stats()
-        # 游戏刚启动时处于活动状态
-        self.game_active = True
+        # 让游戏刚启动时处于非活动状态
+        self.game_active = False
 
     def reset_stats(self):
         """初始化在游戏期间可能发生变化的统计信息"""
