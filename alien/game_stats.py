@@ -8,7 +8,10 @@ class GameStats:
         # 让游戏刚启动时处于非活动状态
         self.game_active = False
         # 任何情况下都不应该重置最高得分
-        self.high_score = 0
+        # 读取文件中的最高得分
+        with open('highest_score.txt', encoding='utf-8') as file:
+            maxscore = file.read()
+        self.high_score = int(maxscore)
 
     def reset_stats(self):
         """初始化在游戏期间可能发生变化的统计信息"""

@@ -98,7 +98,7 @@ class AlienInvasion:
             # 每次循环都重绘屏幕
 
     def _check_events(self):
-        # 监视键盘和鼠标事件。
+        """监视键盘和鼠标事件。"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
