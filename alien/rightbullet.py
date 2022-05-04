@@ -1,9 +1,12 @@
+import math
+from math import tan
+
 import pygame
 from pygame.sprite import Sprite
 
 
-class Bullet(Sprite):
-    """管理飞船所发射子弹的类"""
+class RightBullet(Sprite):
+    """管理飞船所发射右边子弹的类"""
 
     def __init__(self, ai_game):
         """在飞船当前位置创建一个子弹对象。"""
@@ -22,13 +25,13 @@ class Bullet(Sprite):
         self.x = float(self.rect.x)
 
     def update(self):
-        """向上移动子弹"""
+        """向斜上方移动子弹"""
         # 更新表示子弹位置的小数值。
         self.y -= self.settings.bullet_speed
-        # self.x += self.settings.bullet_speed
+        self.x += tan(math.pi / 6) * self.settings.bullet_speed
         # 更新表示子弹的rect的位置
         self.rect.y = self.y
-        # self.rect.x = self.x
+        self.rect.x = self.x
 
     def draw_bullet(self):
         """在屏幕上绘制子弹"""

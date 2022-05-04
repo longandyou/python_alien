@@ -2,6 +2,8 @@ import sys
 from time import sleep
 
 import pygame
+from Scripts.activate_this import path
+
 from settings import Settings
 
 from game_stats import GameStats
@@ -9,6 +11,8 @@ from scoreboard import Scoreboard
 from button import Button
 from ship import Ship
 from bullet import Bullet
+from leftbullet import LeftBullet
+from rightbullet import RightBullet
 from alien import Alien
 
 
@@ -35,6 +39,8 @@ class AlienInvasion:
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
+        self.leftbullets = pygame.sprite.Group()
+        self.rightbullets = pygame.sprite.Group()
         self.aliens = pygame.sprite.Group()
 
         self._create_fleet()
@@ -92,6 +98,8 @@ class AlienInvasion:
             if self.stats.game_active:
                 self.ship.update()
                 self._update_bullets()
+                self._update_leftbullets()
+                self._update_rightbullets()
                 self._update_aliens()
 
             self._update_screen()
@@ -125,6 +133,8 @@ class AlienInvasion:
             # 清空余下的外星人和子弹
             self.aliens.empty()
             self.bullets.empty()
+            self.leftbullets.empty()
+            self.rightbullets.empty()
 
             # 创建一群新的外星人并且让飞船居中
             self._create_fleet()
@@ -143,6 +153,8 @@ class AlienInvasion:
             sys.exit()
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
+            self._fire_leftbullet()
+            self._fire_rightbullet()
 
     def _check_keyup_events(self, event):
         """响应松开按键"""
@@ -168,6 +180,40 @@ class AlienInvasion:
 
         self._check_bullet_alien_collisions()
 
+    def _fire_leftbullet(self):
+        """创建一颗子弹，并将其加入编组bullets中。"""
+        if len(self.leftbullets) < self.settings.bullets_allowed:
+            new_leftbullet = LeftBullet(self)
+            self.bullets.add(new_leftbullet)
+
+    def _update_leftbullets(self):
+        """更新子弹的位置并删除消失的子弹。"""
+        # 删除消失的子弹
+        self.leftbullets.update()
+
+        for leftbullet in self.leftbullets.copy():
+            if leftbullet.rect.bottom <= 0:
+                self.leftbullets.remove(leftbullet)
+
+        self._check_bullet_alien_collisions()
+
+    def _fire_rightbullet(self):
+        """创建一颗子弹，并将其加入编组bullets中。"""
+        if len(self.rightbullets) < self.settings.bullets_allowed:
+            new_rightbullet = RightBullet(self)
+            self.bullets.add(new_rightbullet)
+
+    def _update_rightbullets(self):
+        """更新子弹的位置并删除消失的子弹。"""
+        # 删除消失的子弹
+        self.rightbullets.update()
+
+        for rightbullet in self.rightbullets.copy():
+            if rightbullet.rect.bottom <= 0:
+                self.rightbullets.remove(rightbullet)
+
+        self._check_bullet_alien_collisions()
+
     def _check_bullet_alien_collisions(self):
         """响应子弹与外星人碰撞"""
         # 检查是否有子弹击中了外星人
@@ -175,8 +221,24 @@ class AlienInvasion:
         collisions = pygame.sprite.groupcollide(
             self.bullets, self.aliens, True, True
         )
+        collisions2 = pygame.sprite.groupcollide(
+            self.leftbullets, self.aliens, True, True
+        )
+        collisions3 = pygame.sprite.groupcollide(
+            self.rightbullets, self.aliens, True, True
+        )
         if collisions:
             for aliens in collisions.values():
+                self.stats.score += self.settings.alien_points * len(aliens)
+            self.sb.prep_score()
+            self.sb.check_high_score()
+        if collisions2:
+            for aliens in collisions2.values():
+                self.stats.score += self.settings.alien_points * len(aliens)
+            self.sb.prep_score()
+            self.sb.check_high_score()
+        if collisions3:
+            for aliens in collisions3.values():
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
             self.sb.check_high_score()
@@ -184,6 +246,8 @@ class AlienInvasion:
         if not self.aliens:
             # 删除所有的子弹并且新建一群外星人
             self.bullets.empty()
+            self.leftbullets.empty()
+            self.rightbullets.empty()
             self._create_fleet()
             self.settings.increase_speed()
 
@@ -222,6 +286,8 @@ class AlienInvasion:
             # 清空余下的外星人和子弹
             self.aliens.empty()
             self.bullets.empty()
+            self.leftbullets.empty()
+            self.rightbullets.empty()
 
             # 创建一群新的外星人
             self._create_fleet()
@@ -238,6 +304,10 @@ class AlienInvasion:
         self.ship.blitime()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
+        for leftbullet in self.leftbullets.sprites():
+            leftbullet.draw_bullet()
+        for rightbullet in self.rightbullets.sprites():
+            rightbullet.draw_bullet()
         self.aliens.draw(self.screen)
         # 显示得分
         self.sb.show_score()

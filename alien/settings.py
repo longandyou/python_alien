@@ -13,10 +13,24 @@ class Settings:
 
         # 子弹设置
         self.bullet_speed = 1.0
-        self.bullet_width = 3
+        self.bullet_width = 20
         self.bullet_height = 15
         self.bullet_color = (60, 60, 60)
         self.bullets_allowed = 10
+
+        # # 左边子弹设置
+        # self.leftbullet_speed = 1.0
+        # self.leftbullet_width = 3
+        # self.leftbullet_height = 15
+        # self.leftbullet_color = (60, 60, 60)
+        # self.leftbullets_allowed = 10
+        #
+        # # 右边子弹设置
+        # self.rightbullet_speed = 1.0
+        # self.rightbullet_width = 3
+        # self.rightbullet_height = 15
+        # self.rightbullet_color = (60, 60, 60)
+        # self.rightbullets_allowed = 10
 
         # 外星人设置
         self.alien_speed = 2
