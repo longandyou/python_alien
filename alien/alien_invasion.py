@@ -15,10 +15,8 @@ from leftbullet import LeftBullet
 from rightbullet import RightBullet
 from alien import Alien
 
-
 class AlienInvasion:
     """管理游戏资源和行为的类"""
-
     def __init__(self):
         """初始化游戏并创建游戏资源"""
         pygame.init()
@@ -98,8 +96,10 @@ class AlienInvasion:
             if self.stats.game_active:
                 self.ship.update()
                 self._update_bullets()
-                self._update_leftbullets()
-                self._update_rightbullets()
+                if self.stats.leftbullet:
+                    self._update_leftbullets()
+                if self.stats.rightbullet:
+                    self._update_rightbullets()
                 self._update_aliens()
 
             self._update_screen()
@@ -133,8 +133,10 @@ class AlienInvasion:
             # 清空余下的外星人和子弹
             self.aliens.empty()
             self.bullets.empty()
-            self.leftbullets.empty()
-            self.rightbullets.empty()
+            if self.stats.leftbullet:
+                self.leftbullets.empty()
+            if self.stats.rightbullet:
+                self.rightbullets.empty()
 
             # 创建一群新的外星人并且让飞船居中
             self._create_fleet()
@@ -153,8 +155,10 @@ class AlienInvasion:
             sys.exit()
         elif event.key == pygame.K_SPACE:
             self._fire_bullet()
-            self._fire_leftbullet()
-            self._fire_rightbullet()
+            if self.stats.leftbullet:
+                self._fire_leftbullet()
+            if self.stats.rightbullet:
+                self._fire_rightbullet()
 
     def _check_keyup_events(self, event):
         """响应松开按键"""
@@ -221,38 +225,48 @@ class AlienInvasion:
         collisions = pygame.sprite.groupcollide(
             self.bullets, self.aliens, True, True
         )
-        collisions2 = pygame.sprite.groupcollide(
-            self.leftbullets, self.aliens, True, True
-        )
-        collisions3 = pygame.sprite.groupcollide(
-            self.rightbullets, self.aliens, True, True
-        )
+        if self.stats.leftbullet:
+            collisions2 = pygame.sprite.groupcollide(
+                self.leftbullets, self.aliens, True, True
+            )
+        if self.stats.rightbullet:
+            collisions3 = pygame.sprite.groupcollide(
+                self.rightbullets, self.aliens, True, True
+            )
         if collisions:
             for aliens in collisions.values():
                 self.stats.score += self.settings.alien_points * len(aliens)
             self.sb.prep_score()
             self.sb.check_high_score()
-        if collisions2:
-            for aliens in collisions2.values():
-                self.stats.score += self.settings.alien_points * len(aliens)
-            self.sb.prep_score()
-            self.sb.check_high_score()
-        if collisions3:
-            for aliens in collisions3.values():
-                self.stats.score += self.settings.alien_points * len(aliens)
-            self.sb.prep_score()
-            self.sb.check_high_score()
+        if self.stats.leftbullet:
+            if collisions2:
+                for aliens in collisions2.values():
+                    self.stats.score += self.settings.alien_points * len(aliens)
+                self.sb.prep_score()
+                self.sb.check_high_score()
+        if self.stats.rightbullet:
+            if collisions3:
+                for aliens in collisions3.values():
+                    self.stats.score += self.settings.alien_points * len(aliens)
+                self.sb.prep_score()
+                self.sb.check_high_score()
 
         if not self.aliens:
             # 删除所有的子弹并且新建一群外星人
             self.bullets.empty()
-            self.leftbullets.empty()
-            self.rightbullets.empty()
+            if self.stats.leftbullet:
+                self.leftbullets.empty()
+            if self.stats.rightbullet:
+                self.rightbullets.empty()
             self._create_fleet()
             self.settings.increase_speed()
 
             # 提升等级
             self.stats.level += 1
+            if self.stats.level >= 2:
+                self.stats.leftbullet = True
+            if self.stats.level >= 3:
+                self.stats.rightbullet = True
             self.sb.prep_level()
 
     def _update_aliens(self):
@@ -286,8 +300,10 @@ class AlienInvasion:
             # 清空余下的外星人和子弹
             self.aliens.empty()
             self.bullets.empty()
-            self.leftbullets.empty()
-            self.rightbullets.empty()
+            if self.stats.leftbullet:
+                self.leftbullets.empty()
+            if self.stats.rightbullet:
+                self.rightbullets.empty()
 
             # 创建一群新的外星人
             self._create_fleet()
@@ -304,10 +320,12 @@ class AlienInvasion:
         self.ship.blitime()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
-        for leftbullet in self.leftbullets.sprites():
-            leftbullet.draw_bullet()
-        for rightbullet in self.rightbullets.sprites():
-            rightbullet.draw_bullet()
+        if self.stats.leftbullet:
+            for leftbullet in self.leftbullets.sprites():
+                leftbullet.draw_bullet()
+        if self.stats.rightbullet:
+            for rightbullet in self.rightbullets.sprites():
+                rightbullet.draw_bullet()
         self.aliens.draw(self.screen)
         # 显示得分
         self.sb.show_score()

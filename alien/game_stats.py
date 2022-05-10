@@ -7,6 +7,8 @@ class GameStats:
         self.reset_stats()
         # 让游戏刚启动时处于非活动状态
         self.game_active = False
+        self.leftbullet = False
+        self.rightbullet = False
         # 任何情况下都不应该重置最高得分
         # 读取文件中的最高得分
         with open('highest_score.txt', encoding='utf-8') as file:
