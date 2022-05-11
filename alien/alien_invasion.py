@@ -96,10 +96,8 @@ class AlienInvasion:
             if self.stats.game_active:
                 self.ship.update()
                 self._update_bullets()
-                if self.stats.leftbullet:
-                    self._update_leftbullets()
-                if self.stats.rightbullet:
-                    self._update_rightbullets()
+                self._update_leftbullets()
+                self._update_rightbullets()
                 self._update_aliens()
 
             self._update_screen()
@@ -188,7 +186,7 @@ class AlienInvasion:
         """创建一颗子弹，并将其加入编组bullets中。"""
         if len(self.leftbullets) < self.settings.bullets_allowed:
             new_leftbullet = LeftBullet(self)
-            self.bullets.add(new_leftbullet)
+            self.leftbullets.add(new_leftbullet)
 
     def _update_leftbullets(self):
         """更新子弹的位置并删除消失的子弹。"""
@@ -205,7 +203,7 @@ class AlienInvasion:
         """创建一颗子弹，并将其加入编组bullets中。"""
         if len(self.rightbullets) < self.settings.bullets_allowed:
             new_rightbullet = RightBullet(self)
-            self.bullets.add(new_rightbullet)
+            self.rightbullets.add(new_rightbullet)
 
     def _update_rightbullets(self):
         """更新子弹的位置并删除消失的子弹。"""
@@ -222,16 +220,25 @@ class AlienInvasion:
         """响应子弹与外星人碰撞"""
         # 检查是否有子弹击中了外星人
         # 如果是，就删除相应的子弹和外星人
+        flag1 = True
+        flag2 = True
+        flag3 = True
+        if self.stats.level >= 4:
+            flag1 = False
+        if self.stats.level >= 5:
+            flag2 = False
+        if self.stats.level >= 6:
+            flag3 = False
         collisions = pygame.sprite.groupcollide(
-            self.bullets, self.aliens, True, True
-        )
+                self.bullets, self.aliens, flag1, True
+            )
         if self.stats.leftbullet:
             collisions2 = pygame.sprite.groupcollide(
-                self.leftbullets, self.aliens, True, True
+                self.leftbullets, self.aliens, flag2, True
             )
         if self.stats.rightbullet:
             collisions3 = pygame.sprite.groupcollide(
-                self.rightbullets, self.aliens, True, True
+                self.rightbullets, self.aliens, flag3, True
             )
         if collisions:
             for aliens in collisions.values():
