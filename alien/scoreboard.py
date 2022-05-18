@@ -3,6 +3,7 @@ from pygame.sprite import Group
 
 from ship import Ship
 
+
 class Scoreboard:
     """显示得分信息的类"""
 
@@ -29,12 +30,22 @@ class Scoreboard:
         rounded_score = round(self.stats.score, -1)
         score_str = "{:,}".format(rounded_score)
         self.score_image = self.font.render(score_str, True,
-                            self.text_color, self.settings.bg_color)
+                                            self.text_color, self.settings.bg_color)
 
         # 在屏幕右上角显示得分
         self.score_rect = self.score_image.get_rect()
         self.score_rect.right = self.screen_rect.right - 20
         self.score_rect.top = 20
+
+        # 渲染汉字
+        font_name = pygame.font.match_font('SimHei')
+        self.font = pygame.font.Font(font_name, 30)
+        self.test2_image = self.font.render('当前得分：', True,
+                                            self.text_color, self.settings.bg_color)
+
+        self.test2_rect = self.test2_image.get_rect()
+        self.test2_rect.right = self.score_rect.left
+        self.test2_rect.top = 20
 
     def prep_high_score(self):
         """将最高得分转换为渲染的图像"""
@@ -47,6 +58,15 @@ class Scoreboard:
         self.high_score_rect = self.high_score_image.get_rect()
         self.high_score_rect.centerx = self.screen_rect.centerx
         self.high_score_rect.top = self.score_rect.top
+
+        # 渲染汉字
+        font_name = pygame.font.match_font('SimHei')
+        self.font = pygame.font.Font(font_name, 30)
+        self.test1_image = self.font.render('最高得分：', True,
+                                            self.text_color, self.settings.bg_color)
+        self.test1_rect = self.test1_image.get_rect()
+        self.test1_rect.right = self.high_score_rect.left
+        self.test1_rect.top = self.score_rect.top
 
     def check_high_score(self):
         """检查是否诞生了新的最高得分,是的话将其写入文件中"""
@@ -67,6 +87,16 @@ class Scoreboard:
         self.level_rect.right = self.score_rect.right
         self.level_rect.top = self.score_rect.bottom + 10
 
+        # 渲染汉字
+        font_name = pygame.font.match_font('SimHei')
+        self.font = pygame.font.Font(font_name, 30)
+        self.test3_image = self.font.render('等级：', True,
+                                            self.text_color, self.settings.bg_color)
+
+        self.test3_rect = self.test3_image.get_rect()
+        self.test3_rect.right = self.level_rect.left
+        self.test3_rect.top = self.score_rect.bottom + 10
+
     def prep_ships(self):
         """显示还余下多少艘飞船"""
         self.ships = Group()
@@ -81,4 +111,8 @@ class Scoreboard:
         self.screen.blit(self.score_image, self.score_rect)
         self.screen.blit(self.high_score_image, self.high_score_rect)
         self.screen.blit(self.level_image, self.level_rect)
+        # 渲染汉字文本
+        self.screen.blit(self.test1_image, self.test1_rect)
+        self.screen.blit(self.test2_image, self.test2_rect)
+        self.screen.blit(self.test3_image, self.test3_rect)
         self.ships.draw(self.screen)

@@ -19,4 +19,4 @@ class GameStats:
         """初始化在游戏期间可能发生变化的统计信息"""
         self.ships_left = self.settings.ship_limit
         self.score = 0
-        self.level = 4
+        self.level = 1

@@ -9,7 +9,7 @@ class Settings:
 
         # 飞船设置
         self.ship_speed = 1.5
-        self.ship_limit = 1
+        self.ship_limit = 2
 
         # 子弹设置
         self.bullet_speed = 1.0
@@ -33,8 +33,8 @@ class Settings:
         # self.rightbullets_allowed = 10
 
         # 外星人设置
-        self.alien_speed = 2
-        self.fleet_drop_speed = 1
+        self.alien_speed = 1
+        self.fleet_drop_speed = 5
         # fleet_direction 为 1 表示向右移动，为-1表示向左移动
         self.fleet_direction = 1
 
@@ -58,8 +58,8 @@ class Settings:
 
     def increase_speed(self):
         """提高速度设置和外星人分数"""
-        # self.ship_speed *= self.speedup_scale
-        # self.bullet_speed *= self.speedup_scale
-        # self.alien_speed *= self.speedup_scale
+        self.ship_speed *= self.speedup_scale
+        self.bullet_speed *= self.speedup_scale
+        self.alien_speed *= self.speedup_scale
 
         self.alien_points = int(self.alien_points * self.score_scale)

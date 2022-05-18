@@ -230,11 +230,11 @@ class AlienInvasion:
         if self.stats.level >= 6:
             flag3 = False
         collisions = pygame.sprite.groupcollide(
-                self.bullets, self.aliens, flag1, True
+                self.bullets, self.aliens, flag3, True
             )
         if self.stats.leftbullet:
             collisions2 = pygame.sprite.groupcollide(
-                self.leftbullets, self.aliens, flag2, True
+                self.leftbullets, self.aliens, flag3, True
             )
         if self.stats.rightbullet:
             collisions3 = pygame.sprite.groupcollide(
